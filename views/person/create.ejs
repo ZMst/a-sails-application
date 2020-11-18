@@ -1,0 +1,25 @@
+<!--create.ejs-->
+<p style="font-weight: bold; font-size: 1cm" >Create </p>
+<form action="/person/create" method="post">
+
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input class="input" type="text" name="Person[name]" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Age</label>
+        <div class="control">
+            <input class="input" type="number" name="Person[img]" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-link" type="submit">Submit</button>
+        </div>
+    </div>
+
+</form>

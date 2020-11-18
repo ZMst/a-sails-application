@@ -1,0 +1,104 @@
+<script>
+var transforhight = "<%= rent.box %>";
+    if (transforhight) {
+        document.getElementById("box").checked = "true";
+    }
+    else {
+        document.getElementById("box").checked = "false";
+
+    }
+</script>
+<!--update.ejs-->
+<form action="/rent/update/<%= rent.id %>" method="POST">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-12 col-xl-6">
+                <label>Property title:</label>
+                <br>
+                <input type="text" class="form-control" name="Rent[title]" value="<%=rent.title %>" required>
+            </div>
+            <br>
+            <div class="col-12 col-sm-12 col-lg-12 col-xl-6">
+                <label>Image URL:</label>
+                <input type="text" class="form-control" name="Rent[website]" value="<%=rent.website %>" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-12 col-xl-6">
+
+                <label>Estate:</label>
+                <br>
+                <select  name="Rent[HomeType]" class="form-control" id="HomeTypeID">
+                    <option value="Festival City">Festival City</option>
+                    <option value="City One Station">City One Station</option>
+                    <option value="Tin Ma Court">Tin Ma Court</option>
+                    <option value="Island place">Island place</option>
+                    <option value="Heng Fa Chuen">Heng Fa Chuen</option>
+                </select>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-12 col-xl-6">
+                <label>Bedrooms:</label>
+                <br>
+                <input type="number" class="form-control" name="Rent[bedroom]" min=1 max=10 value="<%=rent.bedroom %>"
+                    required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-12 col-xl-6">
+                <label>Gross Area:</label>
+                <br>
+                <input type="number" class="form-control" name="Rent[grossarea]" min=1 max=10000
+                    value="<%=rent.grossarea %>" required>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-12 col-xl-6">
+                <label>Expected Tenants:</label>
+                <br>
+                <input type="number" class="form-control" name="Rent[tenants]" min=1 max=10000
+                    value="<%=rent.tenants %>" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-12 col-xl-6">
+                <label>Rent:</label>
+                <br>
+                <input type="number" class="form-control" name="Rent[money]" min=1 max=100000 value="<%=rent.money %>"
+                    required>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-12 col-xl-6">
+                <input type="checkbox" name="Rent[box]" id="box" value="on"> Highlighted Property
+                <!-- <input name="Rent[box]" type="hidden" value="false" id="box"> -->
+
+                <br>
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+</form>
+
+<form action="/rent/delete/<%=rent.id %>" method="POST">
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+
+<script>
+    var transhightlight = "<%= rent.box %>";
+    if (transhightlight =="on") {
+        document.getElementById("box").checked = "on";
+    }
+    else {
+        document.getElementById("box").checked = "";
+
+    }
+
+    var HomeTypeValue = "<%=rent.HomeType %>";
+    if (HomeTypeValue) {
+        document.getElementById("HomeTypeID").value = HomeTypeValue
+    }
+
+
+</script>
