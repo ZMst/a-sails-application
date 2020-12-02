@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Let's have the break!</title>
+
+<head>
+    <title>Coupon</title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <%/* If you want to discourage search engines from indexing this site, uncomment the following line: */%>
-    <%/* <meta name="robots" content="noindex"> */%>
+        <%/* <meta name="robots" content="noindex"> */%>
 
 
-    <!--
+            <!--
         Stylesheets and Preprocessors
         ==============================
 
@@ -31,121 +32,113 @@
             + Use a different or additional preprocessor, like SASS, SCSS or Stylus
     -->
 
-    <!--STYLES-->
-    <link rel="stylesheet" href="/styles/importer.css">
-    <!--STYLES END-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-  </head>
+            <!--STYLES-->
+            <link rel="stylesheet" href="/styles/importer.css">
+            <!--STYLES END-->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+</head>
 
-  <body>
-    <section class="container">
-      <% if (req.session.role == "admin") {%>
-        <nav class="label1">
-          <a class="Headline" href="http://localhost:1337/person/home">Home</a>
-          <button class="button1" type="button" data-toggle="dropdown" data-target="#target1"
-        aria-controls="target1" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="button1-icon"></span>
-      </button>
-      <div class="target_1" id="target1">
-        <div class="products">
-          <li> <a class="search" href="http://localhost:1337/person/paginate/">Search</a></li>
-          <li> <a class="admin" href="http://localhost:1337/person/index">Admin</a></li>
+<body>
+    <!--TEMPLATES Navbar-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+
+    <nav class="navbar is-warning">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <img src="/images/1.jpg">
+            </a>
+            <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-      </div>
-      
+
+        <div id="navbar-main" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="/">
+                    Home
+                </a>
+                <a class="navbar-item" href="/search">
+                    Search
+                </a>
+                <a class="navbar-item" href="/create">
+                    Create
+                </a>
+                <a class="navbar-item" href="/admin">
+                    Admin
+                </a>
+                <a class="navbar-item" id='redeem' onclick="getMyRedeemedCoupons()">
+                  My Redeemed Coupons
+                </a>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="field is-grouped">
+                    <!-- <p class="control">
+                        <a class="bd-tw-button button" target="_blank" href="http://localhost:1337/user/login">
+                            <span class="icon">
+                                <i class="fas fa-user-plus"></i>
+                            </span>
+                            <span>
+                                Sign up
+                            </span>
+                        </a>
+                    </p> -->
+                    <p class="control">
+                      <% if (!req.session || !req.session.userId) { %>
+                        <a class="button is-dark" href="http://localhost:1337/user/login">
+                            <span class="icon has-text-white-ter">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </span>
+                            <span>Login</span>
+                        </a>
+                        <% } %>
+                    </p>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="level-right"></div>
+        <%if (req.session == undefined || req.session.username == undefined ) {%>
         
 
-    <div class="block">
-      <div class="container">
-        <h1 class="grey">The most delicious</h1>
-        <p class="words">The best bread is made from the best ingredients</p>
-      </div>
-    </div>
-    <%- body %>
-  </div>
-
-
-
-    <!--
-        Client-side Templates
-        ========================
-
-        HTML templates are important prerequisites of modern, rich client applications.
-        To work their magic, frameworks like React, Vue.js, Angular, Ember, and Backbone
-        require that you load these templates client-side.
-
-        By default, your Gruntfile is configured to automatically load and precompile
-        client-side JST templates in your `assets/templates` folder, then
-        include them here automatically (between TEMPLATES and TEMPLATES END).
-
-        To customize this behavior to fit your needs, just edit `tasks/pipeline.js`.
-        For example, here are a few things you could do:
-
-            + Import templates from other directories
-            + Use a different view engine (handlebars, dust, pug/jade, etc.)
-            + Internationalize your client-side templates using a server-side
-              stringfile before they're served.
-    -->
-
-    <!--TEMPLATES-->
+                  <%}else{%>
+                    Hi, <%=req.session.role%>
+                    <p class="level-item "><p style="font-weight: 100; font-size: large;"> <%= req.session.username %> </p></p>
+                    <a class="button is-danger" href="/user/logout">
+                      <strong>logout</strong>
+                    </a>      
+          
+                  <%}%>
+    </nav>
     <!--TEMPLATES END-->
 
-
-    <!--
-        Server-side View Locals
-        ========================
-
-        Sometimes, it's convenient to get access to your server-side view locals from
-        client-side JavaScript.  This can improve page load times, remove the need for
-        extra AJAX requests, and make your client-side code easier to understand and
-        to maintain.  Sails provides a simple mechanism for accessing dynamic view
-        locals: the "exposeLocalsToBrowser()" view partial.
-
-        For more information on using this built-in feature, see:
-        https://sailsjs.com/docs/concepts/views/locals#?escaping-untrusted-data-using-exposelocalstobrowser
-
-    -->
-
-
-    <!--
-
-      Client-side Javascript
-      ========================
-
-      You can always bring in JS files manually with `script` tags, or asynchronously
-      on the client using a solution like AMD (RequireJS).  Or, if you like, you can
-      take advantage of Sails' conventional asset pipeline (boilerplate Gruntfile).
-
-      By default, files in your `assets/js` folder are included here
-      automatically (between SCRIPTS and SCRIPTS END).  Both JavaScript (.js) and
-      CoffeeScript (.coffee) are supported. In production, your scripts will be minified
-      and concatenated into a single file.
-
-      To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
-      For example, here are a few things you could do:
-
-          + Change the order of your scripts
-          + Import scripts from other directories
-          + Use a different preprocessor, like TypeScript
-
-    -->
-
+    <section class="section">
+        <%- body %>
+    </section>
     <!--SCRIPTS-->
     <script src="/dependencies/sails.io.js"></script>
     <!--SCRIPTS END-->
-    
-  </body>
-</html>
-
-<script type="text/javascript">
-  $(function () {
-    $(".products").find("li").each(function () {
-      var a = $(this).find("a");
-      if ($(a).attr('href') === window.location.href) {
-        $(this).addClass("active");
-      } else {
-        $(this).removeClass("active");
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script>
+      async function getMyRedeemedCoupons() {
+        var req = new Request("/getSession", { method: "GET", });
+            await fetch(req).then(function (response) {
+                return response.json();
+            }).then(function (json) {
+                session = json.session
+                return session
+            })
+            if(!session.userId){
+                location.assign("/user/login");//如果user不存在未登录，就跳转到user登录
+            }else{
+                location.assign("/Coupon/redeem");//如果user存在登录，就跳转到兑换
+            }
       }
-    });
-  })
-</script>
+    </script>
+</body>
+
+</html>

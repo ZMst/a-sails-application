@@ -1,0 +1,161 @@
+<div class="container columns">
+    <article class="message is-danger column is-half">
+        <div class="message-body">
+            In update mode, the <strong>Region</strong> and <strong>Mall</strong> selection will be missed.
+            <br/>
+            Please <strong>select them again manually</strong>.
+        </div>
+    </article>
+</div>
+<form action="/update/<%= coupon.id %>" method="post">
+    <div class="container columns">
+        <div class="column is-half">
+            <div class="field">
+                <label class="label">Title</label>
+                <div class="control">
+                    <input id="title" name="title" class="input" type="text" placeholder="Coupon Title"
+                        value="<%= coupon.title%>" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Restaurant</label>
+                <div class="control">
+                    <input id="restaurant" name="restaurant" class="input" type="text" placeholder="Restaurant"
+                        value="<%= coupon.restaurant%>" required>
+                </div>
+            </div>
+
+            <div class="columns">
+                <div class="field column is-half">
+                    <label class="label">Region</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="region" name="region" onchange="regionSelected(this.value)" required>
+                                <option value="">Select Restaurant Region</option>
+                                <option value="Kowloon">Kowloon</option>
+                                <option value="Hong Kong Island">Hong Kong Island</option>
+                                <option value="New Territories">New Territories</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field column is-half">
+                    <label class="label">Mall</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="mall" id="mall" disabled required>
+                                <option value="">Select Region First</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Image</label>
+                <div class="control">
+                    <input id="image" name="image" class="input" type="text" placeholder="Image URL"
+                        value="<%= coupon.image%>" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="column is-half">
+            <div class="columns">
+                <div class="field column is-half">
+                    <label class="label">Quota</label>
+                    <div class="control">
+                        <input id="quota" name="quota" class="input" type="number" min=0 placeholder="Coupon Quota"
+                            value="<%= coupon.quota%>" required>
+                    </div>
+                </div>
+
+                <div class="field column is-half">
+                    <label class="label">Coins</label>
+                    <div class="control">
+                        <input id="coins" name="coins" class="input" type="number" min=1 placeholder="Coins Cost"
+                            value="<%= coupon.coins%>" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Expire Date</label>
+                <p class="control has-icons-right">
+                    <input id="expire" name="expire" class="input" type="text" placeholder="DD/MM/YYYY"
+                        value="<%= coupon.expire%>" required>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-calendar-minus"></i>
+                    </span>
+                </p>
+            </div>
+
+            <div class="field">
+                <label class="label">Detail</label>
+                <div class="control">
+                    <textarea id="detail" name="detail" class="textarea" placeholder="The details of coupon"
+                        rows="4"><%= coupon.detail%></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="button is-warning">Update</button>
+    <button type="button" class="button is-danger" onclick="window.location.href='/delete/<%= coupon.id%>'">Delete</button>
+</form>
+
+<script>
+    var kowloon = ["Elements", "Harbour City", "Festival Walk", "MegaBox", "APM"];
+    var hongKongIsland = ["IFC Mall", "Pacific Place", "Times Square"];
+    var newTerritories = ["New Town Plaza", "Tsuen Wan Plaza"];
+
+    function regionSelected(region) {
+        var mall = document.getElementById("mall");
+        mall.options.length = 0;
+
+        if (region == "Kowloon") {
+            kowloon.forEach(function (item) {
+                var option = document.createElement("option");
+                option.text = item;
+                option.value = item;
+                mall.add(option);
+            });
+
+            mall.disabled = false;
+        } else if (region == "Hong Kong Island") {
+            hongKongIsland.forEach(function (item) {
+                var option = document.createElement("option");
+                option.text = item;
+                option.value = item;
+                mall.add(option);
+            });
+
+            mall.disabled = false;
+        } else if (region == "New Territories") {
+            newTerritories.forEach(function (item) {
+                var option = document.createElement("option");
+                option.text = item;
+                option.value = item;
+                mall.add(option);
+            });
+
+            mall.disabled = false;
+        } else {
+            var option = document.createElement("option");
+            option.text = "Select Region First";
+            option.value = "";
+            mall.add(option);
+            mall.disabled = true;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+            var $notification = $delete.parentNode;
+
+            $delete.addEventListener('click', () => {
+                $notification.parentNode.removeChild($notification);
+            });
+        });
+    });
+</script>

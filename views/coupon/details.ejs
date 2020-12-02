@@ -1,0 +1,138 @@
+<head>
+    <style>
+    </style>
+  </head>
+  <body>
+<div class="container columns">
+    <div class="column is-two-thirds">
+        <figure class="image is-4by3">
+            <img style="object-fit:cover" src="<%= coupon.image%>" alt="Restaurant image">
+        </figure>
+    </div>
+    <div class="column is-one-third">
+        <div class="tile is-parent">
+            <article class="tile is-child notification is-warning">
+              <div class="content">
+                <h3 class="title is-3">
+                    <%= coupon.title%>
+                </h3>
+                <br>
+                <p class="subtitle">
+                    Restaurant: <%= coupon.restaurant%>
+                </p>
+                <p class="subtitle">
+                    Region: <%= coupon.region%>
+                </p>
+                <p class="subtitle">
+                    Mall: <%= coupon.mall%>
+                </p>
+                <p class="subtitle">
+                    Quota: <%= coupon.quota%>
+                </p>
+                <p class="subtitle">
+                    <span class="icon">
+                        <i class="fas fa-coins"></i>
+                    </span>
+                    : <%= coupon.coins%>
+                </p>
+                <p class="subtitle">
+                    Expire Date: <%= coupon.expire%>
+                </p>
+                <div class="content">
+                    <%= coupon.detail%>
+                </div>
+                <br>
+                <div class="field">
+                    <div class="control">
+                        <button type="button" class="button is-danger" onclick="Redeem()" id="redeem">Reedem</button>
+                    </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+    </div>
+    
+</div>
+<script>
+    var Coupon = `<%- JSON.stringify(coupon) %>`;//把Coupon的数据转化成json字符串
+    Coupon = JSON.parse(Coupon)//json字符串转json对象
+    var userid = parseInt("<%= session['userId'] %>");
+    var role ="<%= session['role'] %>";
+    console.log("userid: "+userid);
+    async function Redeem(couponid) { //定义兑换
+        var r = confirm("Confirm Redeem?");
+        // var req = new Request("/getSession", { method: "GET", });
+
+        // <%= req.session.userId %>
+
+        // await fetch(req).then(function (response) {
+        //     return response.json();
+        // }).then(function (json) {
+        //     session = json.session //用户session
+        //     return session
+        // })
+
+        // var response = await fetch("/getSession");
+
+        
+        if(!role){
+            alert('no user');
+        }else{
+            if (r) {
+                if (!Coupon.id) { //不存在Coupon和用户id时候报错
+                    alert('parameter error!'); // 参数验证
+                }
+                var response = await fetch("/user/Redeem?cid=" + Coupon.id+"&uid="+userid, {
+                    method: "GET",
+                });
+
+                if (response.ok) {
+                    // var html = await response.text();
+                    // alert(html);
+
+                    alert("Success Redeem!");
+                    location.assign("/Coupon/redeem");
+                } else {
+                    alert(response.status + ": " + response.statusText);
+                }
+
+            } else {
+                alert("cancelled");
+            }
+        }
+    };
+    // async function resetButton() {
+    //     var req1 = new Request("/getSession", { method: "GET", });
+    //     await fetch(req1).then(function (response) {
+    //         return response.json();
+    //     }).then(function (json) {
+    //         session = json.session
+    //         console.log(session.userId)
+    //         return session
+    //     })
+    //     if(session.role == 'member'){
+    //         if (!session.userId) {
+    //                 return alert('parameter error!'); // 参数验证
+    //             }
+    //         url = "/user/" + session.userId + "/Redeem"
+    //         var req2 = new Request(url, { method: "GET", });
+    //         await fetch(req2).then(function (response) {
+    //             return response.json();
+    //         }).then(function (json) {
+    //             Coupons = json.Coupons.redeem
+    //             for (let i = 0; i < Coupons.length; i++) {
+    //                 if (Coupons[i].id == "<%= coupon.id %>") {
+    //                     redeem.setAttribute("disabled", true);
+    //                 }
+    //             }
+    //             return Coupons
+    //         })
+    //     }
+    //     if(session.role == 'admin'){
+    //         redeem.setAttribute("disabled", true);
+    //     }
+    // }
+    // resetButton();
+</script>
+</body>

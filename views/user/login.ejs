@@ -1,0 +1,45 @@
+<form class="mx-auto col-12 col-sm-12 col-lg-6 col-xl-6" action="/user/login" method="POST" onsubmit="submitForm(this);return false;">
+
+    <strong>login</strong>
+    
+    <div class="form-group">
+        <label for="exampleInputEmail1">User name</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" name="username">
+    </div>
+    
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">login</button>
+
+    
+</form>
+
+<br><br><br><br>
+
+
+
+<script>
+    async function submitForm(oFormElement){
+        var response = await fetch(oFormElement.action,{
+            method: oFormElement.method,
+            credentials:'same-origin',
+            body:new FormData(oFormElement),
+        });
+
+        if(response.ok){
+            var data = await response.json();
+            alert(data.message)
+            // window.location = document.;
+            window.location.href = "/";
+            
+        }else if(response.status == 401){
+            var data = await response.text();
+            alert(data);
+        }else{
+            alert(response.statusText);
+        }
+    };
+</script>

@@ -1,0 +1,20 @@
+<!--Update.ejs-->
+<style>
+</style>
+
+<body>
+    <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+        <caption style="font-size:30px;font-weight: bold;text-align:justify;">User List</caption>
+        <tr>
+            <th>username</th>
+        </tr>
+        
+        <% users.forEach(function(user) { %>
+        
+        <tr>
+            <td><%= user.username %></td>
+        </tr>
+        
+        <% }); %>
+    </table>  
+<script></script>

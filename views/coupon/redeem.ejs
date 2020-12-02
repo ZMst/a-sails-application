@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.bootcss.com/bulma/0.6.1/css/bulma.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <title>Res-Checking</title>
+    <style>
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: left;
+        };
+        h2{
+            font-size: 30px;
+            font-weight: bold;
+            text-align: left; 
+        };
+    </style>
+</head>
+
+<body>
+    <h1>your pon</h1>
+    <hr>
+    <div class="columns">
+        <div class="column is-one-half">
+            <h2>Redeemed Coupons:</h2>
+        </div>
+        <div class="column is-one-half" id='balance'>
+        </div>
+    </div>
+    <div id="Coupon">
+        <div class="columns">
+        </div>
+    </div>
+    <script>
+        //alert("hello");
+        var userid="<%= session['userId']%>";
+        console.log(userid);
+        function bindData(Coupon, coins){
+            var CouponDiv = document.getElementById("Coupon");
+            var str = ''
+            for (let i = 0; i < Coupon.length; i++) {
+                var begin = '<div class="columns">'
+                var final = '</div>'
+                var urlFirst = '<div class="column is-one-third"><div class="card"><div class="card-image"><figure class="image is-4by3"><img src="' + Coupon[i].image + '">'
+                var urlSecond = '</figure></div><div class="card-content"><p class="title is4"><a href="../Coupon/detail/' + Coupon[i].id + '">' + Coupon[i].title + '</a></p>'
+                var urlThird = '<p style="white-space:normal; word-break : break-all; word-wrap: break-word;">' + Coupon[i].detail + '</p><br>'
+                var urlForth = '<p>Expiry Date: ' + (Coupon[i].expire || '') + '</p></div></div></div>'
+                if(i%3 == 0){
+                    var str1 = begin + urlFirst + urlSecond + urlThird + urlForth
+                } else if(i%3 == 2){
+                    var str1 = urlFirst + urlSecond + urlThird + urlForth + final
+                } else if(i%3 == 1){
+                    var str1 = urlFirst + urlSecond + urlThird + urlForth
+                }
+                str = str + str1
+            }
+            CouponDiv.innerHTML = str
+            var coins = coins
+            balance.innerHTML = '<h2>Current Balance: ' + coins +'</h2>'
+        }
+
+        async function getCoupon(){
+            // console.log("fetching Data....");
+            var formData=new FormData();
+            formData.append("uid",userid);
+            var response=await fetch("/Coupon/redeem",{
+                method: "POST",
+                body: formData
+            });
+            if(response.ok){
+                var jsonData=await response.json();
+                console.log(jsonData);
+                bindData(jsonData.CPIN,jsonData.coins);
+            }else{
+                console.log("fetch fails!");
+            }
+        }
+
+        getCoupon();
+
+
+        //ajax获取已经兑换的优惠券信息
+        // async function getCoupon(){
+        //     var req1 = new Request("/getSession", { method: "GET", });
+        //     await fetch(req1).then(function (response) {
+        //         return response.json();
+        //     }).then(function (json) {
+        //         session = json.session
+        //         return session
+        //     })
+        //     if (!session.userId) {
+        //         return alert('parameter error!'); // 参数验证，这个用户没有登录
+        //     }
+        //     url = "/User/" + session.userId + "/userRedeem"//通过ajax问后端要数据，然后ajax去路由找control里对应的方法，然后在对应的方法里return数据回来
+        //     console.log(url)
+        //     var req2 = new Request(url, { method: "GET", });//看user兑换什么优惠券，在后端请求拿数据
+        //     await fetch(req2).then(function (response) {
+        //         return response.json();
+        //     }).then(function (json) {
+        //         console.log(json)
+        //         Coupon = json.Coupon.CPIN
+        //         console.log(Coupon)
+        //         bindData(Coupon, json.Coupon.coins)
+        //         return Coupons
+        //     })
+        // }
+
+        //getCoupon() //调用getCoupon的方法发Ajax
+    </script>
+</body>
+
+</html>
