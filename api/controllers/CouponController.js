@@ -65,7 +65,7 @@ module.exports = {
     MyRedeemedCoupons: async function (req, res) {
 
         if(req.wantsJSON){
-            var user = await User.findOne(req.body.uid).populate("CPIN");
+            var user = await User.findOne(req.session.userId).populate("CPIN");
             return res.json(user);
         }
 

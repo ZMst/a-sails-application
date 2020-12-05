@@ -63,7 +63,7 @@ module.exports.routes = {
 
   'GET /getSession': 'UserController.getSession',
 
-  'POST/ user/Redeem/:fk': 'UserController.Redeem',
+  'POST /user/Redeem': 'UserController.Redeem',
 
   // SEARCH and PAGINATION
   'GET /search': 'CouponController.search',

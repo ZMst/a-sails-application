@@ -200,19 +200,62 @@ module.exports = {
     //用户兑换优惠券
     Redeem: async function (req, res) {
 
-        if (!req.query.cid || !req.query.uid) { // 输入验证【user id辨认】
+        if (!req.query.cid || !req.session.userId) { // 输入验证【user id辨认】
             return res.status(403).json('parameter error!');
         }
 
-        if (!await User.findOne(req.query.uid)) return res.status(404).json("User not found.");
+        if (!await User.findOne(req.session.userId)) return res.status(404).json("User not found.");
 
-        var thatCoupon = await Coupon.findOne(req.query.cid).populate("userRedeem", { id: req.query.uid });
+        var thatCoupon = await Coupon.findOne(req.query.cid).populate("userRedeem", { id: req.session.userId  });
 
         if (!thatCoupon) return res.status(404).json("Coupon not found.");
 
-        if (thatCoupon.userRedeem.length > 0) return res.status(409).json("Already added.");   // conflict
+        if (thatCoupon.userRedeem.length > 0) {
+            return res.status(404).json("Already Redeemed!");
+        }
+        //两个if
+        var user = await User.findOne(req.session.userId );
+        // var coupon = await User.findOne(req.session.userId).populate('CPIN');
+        if(user.coins >= thatCoupon.coins)
+        {
+            if (thatCoupon.quota >= 1) {
+                // 给用户领券  
+                await User.addToCollection(req.session.userId, 'CPIN').members(
+                    req.query.cid //券的id
+                );
+                // 更新用户 剩余的点数
+                user.coins = user.coins - thatCoupon.coins;
+                await User.updateOne({ id: user.id }).set(
+                    { coins: user.coins }
+                );
 
-        await User.addToCollection(req.query.uid, "CPIN").members(req.query.cid);
+                // 更新session里用户的点数
+                req.session.coins = user.coins;
+
+                // 更新现金券的剩余数量
+                thatCoupon.quota = thatCoupon.quota - 1;
+                await Coupon.updateOne(thatCoupon.id ).set({
+                    quota: thatCoupon.quota,
+                });
+
+            } else {
+                return res.status(408).json('This coupon\'s quota is zero');
+            }
+        } else {
+            return res.status(403).json('Your balance is not enough.');
+        }
+
+        // if(coupon,quta)
+
+
+        // if (thatCoupon.userRedeem.length > 0) 
+        // return res.status(409).json("Already added.");   
+        // // if (user.coins < thatCoupon.coins )
+        // //     return res.status(408).json("Already added1.");
+        // // if (user.quota < thatCoupon.quota )
+        // //     return res.status(407).json("Already added2.");   
+
+        // await User.addToCollection(req.query.uid, "CPIN").members(req.query.cid);
 
         return res.ok();
 
